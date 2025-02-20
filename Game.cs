@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Media;
 
 namespace DungeonExplorer
@@ -12,19 +12,16 @@ namespace DungeonExplorer
         public Game()
         {
             // Initialize the game with one room and one player
-
             Console.Write("Enter your player name: ");
             string playerName = Console.ReadLine();
             player = new Player(playerName, 100);
             currentRoom = new Room("A dark and spooky chamber with a flickering torch struggling to stay lit.");
             Console.WriteLine("\nWelcome, " + player.Name + "! You enter the dungeon...");
-
         }
+
         public void Start()
         {
             // Change the playing logic into true and populate the while loop
-
-
             playing = true;
             while (playing)
             {
@@ -63,9 +60,8 @@ namespace DungeonExplorer
                     playing = false;
                     break;
                 default:
-                    Console.WriteLine("Error!Make sure to enter a valid choice");
+                    Console.WriteLine("Error! Make sure to enter a valid choice");
                     break;
-
             }
         }
     }
