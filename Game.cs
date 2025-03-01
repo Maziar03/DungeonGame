@@ -60,7 +60,7 @@ namespace DungeonExplorer
                     playing = false;
                     break;
                 default:
-                    Console.WriteLine("Error! Make sure to enter a valid choice");
+                    Console.WriteLine("Error! Make sure to enter a valid choice1");
                     break;
             }
         }
