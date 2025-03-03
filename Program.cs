@@ -10,7 +10,7 @@ namespace DungeonExplorer
     {
         static void Main(string[] args)
         {
-            //main game
+            //Main game and where player can start the game 
             Game game = new Game();
             game.Start();
             Console.WriteLine("Waiting for your Implementation");
