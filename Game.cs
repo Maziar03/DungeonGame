@@ -7,13 +7,11 @@ using System.Security.Cryptography;
 
 /* This class represents the main game logic for the Dungeon Explorer game.
  * It manages player interactions, room navigation, combat , and game flow.
- 
  * Attributes:
  * - player(Player): Represents the player character in the game.
  * - rooms (Dictionary<string, Room>): Stores all rooms available in the game.
  * - currentRoom (Room): Tracks the room the player is currently in.
  * - playing (bool): Indicates whether the game is currently active or not.
- 
  * Methods:
  * - Game(): Constructor that initialises the player and the dungeon layout.
  * - Start(): Begins the game loop and manages user input.

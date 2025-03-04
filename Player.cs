@@ -3,12 +3,10 @@ using System.Collections.Generic;
 
 /* This class represents a player in the dungeon exploration game, managing their stats, inventory, and interactions within the dungeon.
  * attributes such as name, health, and inventory.
- *
  * Attributes:
  * - Name(string): The player's name.
  * - Health (int): The player's health points.
  * - inventory (List<string>): A private list that stores the player's collected items.
- *
  * Methods:
  * - Player(string name, int health): Constructor that initialises the player with a name and health.
  * - PickUpItem(string item): Adds an item to the player's inventory and notifies them.
