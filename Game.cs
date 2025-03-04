@@ -22,7 +22,6 @@ using System.Security.Cryptography;
  * - StartCombat(): Engages the player in combat with an enemy if present.
  */
 
-
 namespace DungeonExplorer
 {
     internal class Game

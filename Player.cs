@@ -14,7 +14,6 @@ using System.Collections.Generic;
  * - PickUpItem(string item): Adds an item to the player's inventory and notifies them.
  * - TakeDamage(int damage): Reduces the player's health and prints the remaining health of them.
  * - InventoryContents(): Returns a string representation of the player's inventory.
- *
  */
 
 namespace DungeonExplorer

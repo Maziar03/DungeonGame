@@ -1,11 +1,11 @@
 ﻿/* This class defines a room in the dungeon exploration game, handling its properties, interactions, and connections to other rooms.
  * attributes such as its Information, the next room, and the presence of an enemy.
- *
+ 
  * Attributes:
  * - Info(string): A private field that stores the room's Information.
  * - NextRoom (string): A property that stores the identifier of the next room.
  * - HasEnemy (bool): Indicates whether the room contains an enemy or not.
- *
+ 
  * Methods:
  * - Room(string Info, string nextRoom = null, bool hasEnemy = false):
  * - Constructor that initialises the room's information, next room, and enemy existence.
@@ -34,7 +34,7 @@ namespace DungeonExplorer
         public string GetInfo()
         {
             // Returns the information of the room.
-            return Info;
+            return Info; 
         }
     }
 }
