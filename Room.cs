@@ -1,4 +1,4 @@
-﻿/* This class defines a room in the dungeon exploration game, handling its properties, interactions, and connections to other rooms.
+/* This class defines a room in the dungeon exploration game, handling its properties, interactions, and connections to other rooms.
  * attributes such as its Information, the next room, and the presence of an enemy.
  * Attributes:
  * - Info(string): A private field that stores the room's Information.
