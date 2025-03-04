@@ -35,7 +35,6 @@ namespace DungeonExplorer
         {
             // Returns the information of the room.
             return Info;
-
         }
     }
 }
