@@ -38,6 +38,7 @@ namespace DungeonExplorer
         { // Adds an item to the player's inventory.
             inventory.Add(item);
             Console.WriteLine("You picked up: " + item);
+
         }
 
         public void TakeDamage(int damage)
