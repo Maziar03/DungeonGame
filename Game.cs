@@ -42,8 +42,8 @@ namespace DungeonExplorer
 
             rooms = new Dictionary<string, Room>
             {
-                { "Entrance", new Room("A dark and creepy hallway where a single torch flickers, making eerie shadows dance on the damp stone walls.") },
-                { "Hallway", new Room("A long, damp hallway stretches ahead. You can hear a faint sound in the distance—something’s up.") },
+                { "Entrance", new Room("A dark and creepy hallway where a single torch flickers, making eerie shadows dance on the damp stone walls." , "Hallway") },
+                { "Hallway", new Room("A long, damp hallway stretches ahead. You can hear a faint sound in the distance—something’s up.","Treasure Room") },
                 { "Treasure Room", new Room("A shiny treasure room stacked with gold—but there’s a monster keeping watch!", null, true) }
             };
 
