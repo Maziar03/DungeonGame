@@ -43,8 +43,8 @@ namespace DungeonExplorer
             rooms = new Dictionary<string, Room>
             {
                 { "Entrance", new Room("A dark and creepy hallway where a single torch flickers, making eerie shadows dance on the damp stone walls." , "Hallway") },
-                { "Hallway", new Room("A long, damp hallway stretches ahead. You can hear a faint sound in the distance—something’s up.","Treasure Room") },
-                { "Treasure Room", new Room("A shiny treasure room stacked with gold—but there’s a monster keeping watch!", null, true) }
+                { "Hallway", new Room("A long, damp hallway stretches ahead. You can hear a faint sound in the distanceâ€”somethingâ€™s up.","Treasure Room") },
+                { "Treasure Room", new Room("A shiny treasure room stacked with goldâ€”but thereâ€™s a monster keeping watch!", null, true) }
             };
 
             currentRoom = rooms["Entrance"];
@@ -104,7 +104,7 @@ namespace DungeonExplorer
                     playing = false;
                     break;
                 default:
-                    Console.WriteLine("Oops! That’s not a valid choice. Try again!");
+                    Console.WriteLine("Oops! Thatâ€™s not a valid choice. Try again!");
                     break;
             }
         }
@@ -114,7 +114,7 @@ namespace DungeonExplorer
             // Moves the player to the next room if possible.
             if (currentRoom.HasEnemy)
             {
-                Console.WriteLine("\n A monster stands in your way! You’ll have to take it down first.");
+                Console.WriteLine("\n A monster stands in your way! Youâ€™ll have to take it down first.");
                 return;
             }
 
@@ -168,7 +168,7 @@ namespace DungeonExplorer
             }
             else if (monsterHealth <= 0)
             {
-                Console.WriteLine("\nYou’ve defeated the monster! The way forward is now open.");
+                Console.WriteLine("\nYouâ€™ve defeated the monster! The way forward is now open.");
                 currentRoom.HasEnemy = false;
             }
         }

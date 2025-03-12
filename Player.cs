@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /* This class represents a player in the dungeon exploration game, managing their stats, inventory, and interactions within the dungeon.
