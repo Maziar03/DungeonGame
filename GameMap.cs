@@ -35,7 +35,7 @@ namespace DungeonExplorer
         {
             Random rand = new Random();
 
-            rooms["Entrance"] = new Room("A flickering torch lights the entrance.", "Hallway", null,
+            rooms["Entrance"] = new Room("You see a lit torch by the door", "Hallway", null,
                 new List<Item> { new Potion("Healing Potion", 30) })
             {
                 HasTrap = false
@@ -53,7 +53,7 @@ namespace DungeonExplorer
                 HasTrap = false
             };
 
-            rooms["Armory"] = new Room("You enter an old armory filled with dusty weapons.", "Library",
+            rooms["Armory"] = new Room("You enter an old armory filled with epic  weapons.", "Library",
                 null,
                 rand.Next(2) == 0 ? new List<Item> { new Weapon("Axe", 35), new Potion("Stamina Brew", 20) } : new List<Item>())
             {
@@ -66,12 +66,12 @@ namespace DungeonExplorer
                 HasTrap = true
             };
 
-            rooms["TreasureRoom"] = new Room("Gold glimmers here—but so does danger.", "VictoryRoom", new Dragon())
+            rooms["TreasureRoom"] = new Room("Gold is here—but so does danger.", "VictoryRoom", new Dragon())
             {
                 HasTrap = false
             };
 
-            rooms["VictoryRoom"] = new Room("You find a golden hoard with no threats left. You've won the game!")
+            rooms["VictoryRoom"] = new Room("You find a golden Box  with no threats left. You've won the game!")
             {
                 HasTrap = false
             };

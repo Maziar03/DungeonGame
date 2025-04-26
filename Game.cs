@@ -78,7 +78,7 @@ namespace DungeonExplorer
                         // pick up all items in the room
                         if (map.CurrentRoom.Items.Count == 0)
                         {
-                            Console.WriteLine("There are no more items to pick up here.");
+                            Console.WriteLine("There are no more items to pick up.");
                         }
                         else
                         {
@@ -103,7 +103,7 @@ namespace DungeonExplorer
                         {
                             if (map.CurrentRoom.HasTrap)
                             {
-                                Console.WriteLine("Ouch! You triggered a trap and lost 10 health.");
+                                Console.WriteLine("Ouch! You triggered a trap and lost 10 hp");
                                 player.TakeDamage(10);
                                 stats.RecordDamageTaken(10);
                             }
@@ -114,11 +114,11 @@ namespace DungeonExplorer
                                 string answer = Console.ReadLine();
                                 if (answer.ToLower().Contains("piano"))
                                 {
-                                    Console.WriteLine("Correct! You may proceed.");
+                                    Console.WriteLine("Correct! You can proceed");
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Incorrect! The floor shakes but you barely hang on.");
+                                    Console.WriteLine("Incorrect! The floor shakes but you barely can stand on");
                                     player.TakeDamage(5);
                                     stats.RecordDamageTaken(5);
                                 }
@@ -151,7 +151,7 @@ namespace DungeonExplorer
 
                     case "9":
                         // try healing (example of overloaded methods)
-                        Console.Write("Enter reason for healing (or leave empty): ");
+                        Console.Write("Enter reason for healing (or leave empty if you don't want to specify): ");
                         string reason = Console.ReadLine();
                         if (string.IsNullOrWhiteSpace(reason))
                             player.Heal();             // default healing
@@ -196,7 +196,7 @@ namespace DungeonExplorer
                 }
                 else
                 {
-                    Console.WriteLine("You hesitate... the monster attacks!");
+                    Console.WriteLine("You hesitate..ops monster attacks!");
                     monster.Attack(player);
                     stats.RecordDamageTaken(10);
                     MonsterAI.React(monster);
