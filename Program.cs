@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using DungeonExplorerTests;
 
+   /*
+    * Entry point for the Dungeon Explorer game.
+    * Responsible for launching the main Game loop.
+    */
 namespace DungeonExplorer
 {
     internal class Program
@@ -14,8 +18,6 @@ namespace DungeonExplorer
             //Main game and where player can start the game 
               Game game = new Game();
               game.Start();
-            //GameTestDebug gameTest = new GameTestDebug();
-            //gameTest.RunTests();
             Console.WriteLine("Waiting for your Implementation");
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();

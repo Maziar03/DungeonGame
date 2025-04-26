@@ -2,174 +2,219 @@ using DungeonExplorer;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Media;
 using System.Security.Cryptography;
-
-/* This class represents the main game logic for the Dungeon Explorer game.
- * It manages player interactions, room navigation, combat , and game flow.
- * Attributes:
- * - player(Player): Represents the player character in the game.
- * - rooms (Dictionary<string, Room>): Stores all rooms available in the game.
- * - currentRoom (Room): Tracks the room the player is currently in.
- * - playing (bool): Indicates whether the game is currently active or not.
- * Methods:
- * - Game(): Constructor that initialises the player and the dungeon layout.
- * - Start(): Begins the game loop and manages user input.
- * - HandleChoice(string choice): Handles the player's menu selections.
- * - MoveToNextRoom(): Moves the player to the next room if possible.
- * - StartCombat(): Engages the player in combat with an enemy if present.
- */
+using System.IO;
 
 namespace DungeonExplorer
 {
-    internal class Game
-    {
-        // Shows the player in the game.
-        private Player player;
-        // Stores the game's rooms using a dictionary.
-        private Dictionary<string, Room> rooms;
-        // Shows the current room the player is in.
-        private Room currentRoom;
-        // Indicates whether the game is currently running.
-        private bool playing;
+    /*
+    * Description:
+    * This is the main class that runs the game. It controls how the game starts,
+    * what happens in each room, how the player moves, fights, picks up items,
+    * uses healing, solves puzzles, and saves or ends the game.
+    
+    * Main Functionality:
+    * - Lets the player explore rooms and interact with them.
+    * - Handles movement, picking items, using items, and fighting monsters.
+    * - Uses saving and loading so players can continue later.
+    * - Uses interface (IDamageable) and inheritance for how damage works.
+    * - Also uses overloaded methods (Heal) and basic monster AI reactions.
+    
+    * Input Parameters:
+    * - Player input from console for making choices
+    
+    * Expected Output:
+    * - Room descriptions, health updates, combat messages, inventory updates, etc.
+    */
 
+    public class Game
+    {
+        private Player player;            // the player character
+        private GameMap map;              // handles rooms and navigation
+        private Statistics stats;         // tracks score, damage, items, etc.
+        private bool playing = true;      // keeps the game running
+
+        // sets up the game: load from save or start new
         public Game()
         {
-            // Initialises the game, creating a player and setting up the dungeon layout.
-            Console.Write("Enter your name: ");
-            string playerName = Console.ReadLine();
-            player = new Player(playerName, 100);
-
-            rooms = new Dictionary<string, Room>
+            Console.Write("Load previous save? (y/n): ");
+            if (Console.ReadLine().ToLower() == "y")
             {
-                { "Entrance", new Room("A dark and creepy hallway where a single torch flickers, making eerie shadows dance on the damp stone walls." , "Hallway") },
-                { "Hallway", new Room("A long, damp hallway stretches ahead. You can hear a faint sound in the distance—something’s up.","Treasure Room") },
-                { "Treasure Room", new Room("A shiny treasure room stacked with gold—but there’s a monster keeping watch!", null, true) }
-            };
+                stats = Statistics.Load(out string name, out int health);
+                player = new Player(name, health);
+            }
+            else
+            {
+                Console.Write("Enter your name: ");
+                string name = Console.ReadLine();
+                player = new Player(name, 100);
+                stats = new Statistics();
+            }
 
-            currentRoom = rooms["Entrance"];
-            Console.WriteLine($"\nWelcome, {player.Name}! You enter the dungeon!!!");
+            map = new GameMap();
+            Console.WriteLine($"\nWelcome, {player.Name}. Your quest begins!");
         }
 
+        // the main loop � player chooses what to do each turn
         public void Start()
         {
-            // Starts the game loop and handles user engagement
-            playing = true;
             while (playing)
             {
-                Console.WriteLine("\n***Chose one of these options***");
-                Console.WriteLine("1. View Room Info");
-                Console.WriteLine("2. Pick Up an Item");
-                Console.WriteLine("3. Check Status");
-                Console.WriteLine("4. Move to Next Room");
-                Console.WriteLine("5. Fight Monster");
-                Console.WriteLine("6. Exit Game");
-                Console.Write("Enter your choice: ");
+                Console.WriteLine("\n1. View Room Info\n2. Pick Up Item\n3. Use Item\n4. Move\n5. Fight\n6. Inventory\n7. Exit and See Statistics");
+                Console.WriteLine("8. Save Game");
+                Console.WriteLine("9. Heal (Overloaded Method)");
+                Console.Write("Choice: ");
+                string input = Console.ReadLine();
 
-                string choice = Console.ReadLine();
-                HandleChoice(choice);
-            }
-        }
-
-        private void HandleChoice(string choice)
-        {
-            // Execute the player's menu selection and executes the corresponding action.
-            switch (choice)
-            {
-                case "1":
-                    Console.WriteLine("\nRoom Info: " + currentRoom.GetInfo());
-                    break;
-                case "2":
-                    Console.Write("Enter item to pick up: ");
-                    string item = Console.ReadLine();
-                    player.PickUpItem(item);
-                    break;
-                case "3":
-                    Console.WriteLine("\nPlayer Status:");
-                    Console.WriteLine("Name: " + player.Name);
-                    Console.WriteLine("Health: " + player.Health);
-                    Console.WriteLine("Inventory: " + (player.InventoryContents() == "" ? "Empty" : player.InventoryContents()));
-                    break;
-                case "4":
-                    MoveToNextRoom();
-                    break;
-                case "5":
-                    if (currentRoom.HasEnemy)
-                        StartCombat();
-                    else
-                        Console.WriteLine("\nNo monsters in sight!");
-                    break;
-                case "6":
-                    Console.WriteLine("\nExiting the game. BYE BYE!");
-                    playing = false;
-                    break;
-                default:
-                    Console.WriteLine("Oops! That’s not a valid choice. Try again!");
-                    break;
-            }
-        }
-
-        private void MoveToNextRoom()
-        {
-            // Moves the player to the next room if possible.
-            if (currentRoom.HasEnemy)
-            {
-                Console.WriteLine("\n A monster stands in your way! You’ll have to take it down first.");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(currentRoom.NextRoom))
-            {
-                Console.WriteLine("\nThere's no way out. You've reached the dungeon's final chamber!");
-                return;
-            }
-
-            if (rooms.ContainsKey(currentRoom.NextRoom))
-            {
-                currentRoom = rooms[currentRoom.NextRoom];
-                Console.WriteLine("\nYou step into the next room. What awaits you?");
-            }
-        }
-
-        private void StartCombat()
-        {
-            // Starts combat with an enemy in the room.
-            Console.WriteLine("\nWhoa! A monster just showed up! Get ready to fight!");
-            int monsterHealth = 50;
-
-            while (player.Health > 0 && monsterHealth > 0)
-            {
-                Console.WriteLine("\nChoose an action:");
-                Console.WriteLine("1. Attack");
-                Console.Write("Enter choice: ");
-                string choice = Console.ReadLine();
-
-                if (choice == "1")
+                switch (input)
                 {
-                    Console.WriteLine("You land a powerful hit! The monster takes 20 damage.");
-                    monsterHealth -= 20;
+                    case "1":
+                        Console.WriteLine(map.CurrentRoom.GetInfo());
+                        break;
 
-                    if (monsterHealth > 0)
+                    case "2":
+                        // pick up all items in the room
+                        if (map.CurrentRoom.Items.Count == 0)
+                        {
+                            Console.WriteLine("There are no more items to pick up here.");
+                        }
+                        else
+                        {
+                            foreach (var item in map.CurrentRoom.Items.ToList())
+                            {
+                                player.PickUpItem(item);
+                            }
+                            map.CurrentRoom.Items.Clear();
+                        }
+                        break;
+
+                    case "3":
+                        // use an item from your inventory
+                        Console.Write("Item to use: ");
+                        string itemName = Console.ReadLine();
+                        player.UseItem(itemName, stats);
+                        break;
+
+                    case "4":
+                        // move to the next room and check for traps or puzzles
+                        if (map.MoveToNextRoom())
+                        {
+                            if (map.CurrentRoom.HasTrap)
+                            {
+                                Console.WriteLine("Ouch! You triggered a trap and lost 10 health.");
+                                player.TakeDamage(10);
+                                stats.RecordDamageTaken(10);
+                            }
+                            else if (map.CurrentRoom.Description.ToLower().Contains("riddle"))
+                            {
+                                Console.WriteLine("Puzzle Room Challenge: What has keys but can't open locks?");
+                                Console.Write("Your answer: ");
+                                string answer = Console.ReadLine();
+                                if (answer.ToLower().Contains("piano"))
+                                {
+                                    Console.WriteLine("Correct! You may proceed.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Incorrect! The floor shakes but you barely hang on.");
+                                    player.TakeDamage(5);
+                                    stats.RecordDamageTaken(5);
+                                }
+                            }
+                        }
+                        break;
+
+                    case "5":
+                        // fight any monster in the room
+                        Combat();
+                        break;
+
+                    case "6":
+                        // show what's in your inventory
+                        Console.WriteLine("Inventory: " + player.InventoryContents());
+                        break;
+
+                    case "7":
+                        // end the game and show your stats
+                        playing = false;
+                        stats.PrintSummary();
+                        Console.WriteLine($"Game log saved at: {Path.GetFullPath("game_log.txt")}");
+                        break;
+
+                    case "8":
+                        // save the game
+                        stats.Save(player);
+                        Console.WriteLine("Game saved successfully.");
+                        break;
+
+                    case "9":
+                        // try healing (example of overloaded methods)
+                        Console.Write("Enter reason for healing (or leave empty): ");
+                        string reason = Console.ReadLine();
+                        if (string.IsNullOrWhiteSpace(reason))
+                            player.Heal();             // default healing
+                        else
+                            player.Heal(20, reason);   // healing with reason
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid input.");
+                        break;
+                }
+            }
+        }
+
+        // this is the combat logic between the player and monster
+        private void Combat()
+        {
+            var monster = map.CurrentRoom.Monster;
+            if (monster == null)
+            {
+                Console.WriteLine("No monsters here.");
+                return;
+            }
+
+            Console.WriteLine($"A {monster.Name} appears!");
+
+            while (player.Health > 0 && monster.Health > 0)
+            {
+                Console.Write("Attack (y/n)? ");
+                if (Console.ReadLine().ToLower() == "y")
+                {
+                    Console.WriteLine("You attack!");
+                    monster.TakeDamage(20);
+                    stats.RecordDamageDealt(20);
+
+                    if (monster.Health > 0)
                     {
-                        Console.WriteLine("The monster attacks back! You take 10 damage.");
-                        player.TakeDamage(10);
+                        monster.Attack(player);
+                        stats.RecordDamageTaken(10);
+                        MonsterAI.React(monster); // adds a little monster personality
                     }
                 }
                 else
                 {
-                    Console.WriteLine("That's not an option! You have no choice but to fight!");
+                    Console.WriteLine("You hesitate... the monster attacks!");
+                    monster.Attack(player);
+                    stats.RecordDamageTaken(10);
+                    MonsterAI.React(monster);
                 }
             }
 
-            if (player.Health <= 0)
+            if (monster.Health <= 0)
             {
-                Console.WriteLine("\nYou fought bravely, but you die. Game over.");
-                playing = false;
+                Console.WriteLine($"You defeated the {monster.Name}!");
+                stats.RecordMonsterDefeat();
+                map.CurrentRoom.Monster = null;
             }
-            else if (monsterHealth <= 0)
+            else
             {
-                Console.WriteLine("\nYou’ve defeated the monster! The way forward is now open.");
-                currentRoom.HasEnemy = false;
+                Console.WriteLine("You died. Game over.");
+                stats.PrintSummary();
+                Console.WriteLine($"Game log saved at: {Path.GetFullPath("game_log.txt")}");
+                playing = false;
             }
         }
     }

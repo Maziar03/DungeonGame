@@ -1,53 +1,60 @@
 using System;
 using System.Collections.Generic;
 
-/* This class represents a player in the dungeon exploration game, managing their stats, inventory, and interactions within the dungeon.
- * attributes such as name, health, and inventory.
- * Attributes:
- * - Name(string): The player's name.
- * - Health (int): The player's health points.
- * - inventory (List<string>): A private list that stores the player's collected items.
- * Methods:
- * - Player(string name, int health): Constructor that initialises the player with a name and health.
- * - PickUpItem(string item): Adds an item to the player's inventory and notifies them.
- * - TakeDamage(int damage): Reduces the player's health and prints the remaining health of them.
- * - InventoryContents(): Returns a string representation of the player's inventory.
- */
 
 namespace DungeonExplorer
 {
-    public class Player
-    {   // Gets the player's name.
-        public string Name { get; private set; }
-        // Gets the player's health points.
-        public int Health { get; private set; }
-        // Stores the player's inventory items.
-        private List<string> inventory;
+    /*
+    * Description:
+    * This class represents the player you control in the game.
+    * It inherits from the abstract Creature class, so it already has a name and health.
+    * It also handles inventory and lets the player use items and heal.
+    
+    * Main Functionality:
+    * - Manages the player's items (using an Inventory object)
+    * - Lets the player pick up and use items
+    * - Heals the player when needed
+    
+    * Input Parameters:
+    * - name: the player’s chosen name
+    * - health: the amount of health the player starts with
+    
+    * Expected Output:
+    * - Shows healing messages
+    * - Inventory changes depending on actions
+    */
 
-        public Player(string name, int health)
-        {  // Initialises a new instance of the Player class with a specified name and health value.
-            Name = name;
-            Health = health;
-            inventory = new List<string>();
-        }
+    public class Player : Creature
+    {
+        // keeps track of the player’s items (like potions or weapons)
+        public Inventory Inventory { get; private set; }
 
-        public void PickUpItem(string item)
-        { // Adds an item to the player's inventory.
-            inventory.Add(item);
-            Console.WriteLine("You picked up: " + item);
-
-        }
-
-        public void TakeDamage(int damage)
+        // sets up the player with a name, health, and a new inventory
+        public Player(string name, int health) : base(name, health)
         {
-            // Reduces the player's health by a specified damage amount and prints the health.
-            Health -= damage;
-            Console.WriteLine($"You have {Health} health remaining.");
+            Inventory = new Inventory();
         }
 
-        public string InventoryContents()
-        {   // Returns a string representation of the player's inventory contents.
-            return string.Join(", ", inventory);
+        // lets the player pick up an item and add it to inventory
+        public void PickUpItem(Item item)
+        {
+            Inventory.AddItem(item);
+        }
+
+        // uses an item by name — stats tracking is optional
+        public void UseItem(string itemName, Statistics stats = null)
+        {
+            Inventory.UseItem(itemName, this, stats);
+        }
+
+        // lists what’s currently in the player’s inventory
+        public string InventoryContents() => Inventory.ListItems();
+
+        // adds health to the player (used by potions or healing)
+        public void Heal(int amount)
+        {
+            Health += amount;
+            Console.WriteLine($"{Name} heals for {amount}. Total health: {Health}");
         }
     }
 }
