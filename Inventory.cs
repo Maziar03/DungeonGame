@@ -36,7 +36,7 @@ namespace DungeonExplorer
         {
             if (items.Count >= MaxItems)
             {
-                Console.WriteLine("Inventory full. Consider discarding an item.");
+                Console.WriteLine("Inventory full. Remove item.");
                 return;
             }
             items.Add(item);

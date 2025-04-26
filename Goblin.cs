@@ -31,7 +31,7 @@ namespace DungeonExplorer
         // Goblin attacks by slashing and deals small damage
         public override void Attack(Player player)
         {
-            Console.WriteLine("Goblin slashes you with its dagger!");
+            Console.WriteLine("Goblin stabbed you with its dagger!");
             player.TakeDamage(8);
         }
     }

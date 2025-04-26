@@ -53,7 +53,7 @@ namespace DungeonExplorer
         // gives the description of the room and warns if there's a monster
         public string GetInfo()
         {
-            return Description + (Monster != null ? " There's something lurking here..." : "");
+            return Description + (Monster != null ? " There's something moving here..." : "");
         }
     }
 }
